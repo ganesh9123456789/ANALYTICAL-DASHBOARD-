@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Analytical Dashboard - Antigravity AI</title>
+    
+    <!-- Premium Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- External CDNs for Analytics Core -->
+    <!-- 1. PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <!-- 2. SheetJS for Excel files parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- 3. ApexCharts for Premium Interactive Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <!-- 4. Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">A</div>
+                <span class="logo-text">Antigravity AI</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Data Portal</div>
+                <div class="nav-item active" data-tab="data-center">
+                    <i data-lucide="database"></i>
+                    <span>Data Center</span>
+                </div>
+                
+                <div class="nav-section-title" id="nav-analysis-title" style="display: none;">Analysis Panels</div>
+                <div class="nav-item" data-tab="sales-tab" id="nav-sales" style="display: none;">
+                    <i data-lucide="trending-up"></i>
+                    <span>Sales & Revenue</span>
+                </div>
+                <div class="nav-item" data-tab="churn-tab" id="nav-churn" style="display: none;">
+                    <i data-lucide="users-round"></i>
+                    <span>Customer Churn</span>
+                </div>
+                <div class="nav-item" data-tab="segmentation-tab" id="nav-segmentation" style="display: none;">
+                    <i data-lucide="grid-3x3"></i>
+                    <span>Segmentation</span>
+                </div>
+                <div class="nav-item" data-tab="performance-tab" id="nav-performance" style="display: none;">
+                    <i data-lucide="award"></i>
+                    <span>Employee Performance</span>
+                </div>
+                <div class="nav-item" data-tab="custom-tab" id="nav-custom" style="display: none;">
+                    <i data-lucide="sliders-horizontal"></i>
+                    <span>Custom Analyzer</span>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">AG</div>
+                    <div class="user-info">
+                        <div class="user-name">Guest Analyst</div>
+                        <div class="user-role">Enterprise Account</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Dynamic Print Report Header (Visible in print prints only) -->
+            <div class="print-report-header">
+                <div class="print-report-header-left">
+                    <h1 id="print-header-title">AI Analytical Executive Report</h1>
+                    <p id="print-header-subtitle">Intelligent Trends & Performance Profiler</p>
+                </div>
+                <div class="print-report-header-right">
+                    <p style="margin: 0; font-weight: 700; color: #1e40af;">Antigravity AI Engine</p>
+                    <p style="margin: 2px 0 0 0;"><strong>Date:</strong> <span id="print-report-date">May 31, 2026</span></p>
+                    <p style="margin: 2px 0 0 0;"><strong>Confidentiality:</strong> Internal Use Only</p>
+                </div>
+            </div>
+            
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-title-section">
+                    <h1 id="main-panel-title">Data Center</h1>
+                    <p id="main-panel-subtitle">Upload your business file or choose a sample to analyze.</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle-btn" id="theme-toggle" title="Switch Theme">
+                        <i data-lucide="sun"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="export-pdf-btn" style="display: none;">
+                        <i data-lucide="download"></i>
+                        <span>Export PDF Report</span>
+                    </button>
+                    <button class="btn btn-primary" id="upload-another-btn" style="display: none;">
+                        <i data-lucide="upload-cloud"></i>
+                        <span>Upload New Data</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- 1. DATA CENTER TAB: Drag-Drop Upload & Sample Datasets -->
+            <div class="tab-content active" id="data-center">
+                <div class="upload-portal-container">
+                    <div class="upload-zone" id="drop-zone">
+                        <input type="file" id="file-input" class="upload-file-input" accept=".csv,.xlsx,.xls,.json">
+                        <div class="upload-icon-container">
+                            <i data-lucide="upload-cloud"></i>
+                        </div>
+                        <h2 class="upload-title">Drag & drop your dataset here</h2>
+                        <p class="upload-description">Supports CSV, XLSX, XLS, and JSON formats (Max 50MB)</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                        
+                        <div class="file-type-tags">
+                            <span class="file-tag">CSV Parser</span>
+                            <span class="file-tag">Excel SheetJS</span>
+                            <span class="file-tag">JSON Reader</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sample-datasets-section">
+                        <h3 class="sample-title">Or instantly explore our preloaded AI Sandboxes</h3>
+                        <div class="sample-grid">
+                            <div class="sample-card" data-sample="sales">
+                                <div class="sample-card-icon"><i data-lucide="circle-dollar-sign"></i></div>
+                                <div class="sample-card-name">Sales & Revenue</div>
+                                <div class="sample-card-desc">Trends, forecasts, product profits, regional breakdowns.</div>
+                            </div>
+                            
+                            <div class="sample-card" data-sample="churn">
+                                <div class="sample-card-icon"><i data-lucide="user-x"></i></div>
+                                <div class="sample-card-name">Customer Churn</div>
+                                <div class="sample-card-desc">Churn risk propensities, variables correlation, cohorts.</div>
+                            </div>
+                            
+                            <div class="sample-card" data-sample="segmentation">
+                                <div class="sample-card-icon"><i data-lucide="pie-chart"></i></div>
+                                <div class="sample-card-name">Customer Segments</div>
+                                <div class="sample-card-desc">Interactive K-Means clustering (Spend vs. Frequency).</div>
+                            </div>
+                            
+                            <div class="sample-card" data-sample="employee">
+                                <div class="sample-card-icon"><i data-lucide="heart-handshake"></i></div>
+                                <div class="sample-card-name">Employee Performance</div>
+                                <div class="sample-card-desc">KPI metrics, evaluations correlation, anomalies detection.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ACTIVE DATASET META SUMMARY PANEL (Hidden by default) -->
+            <div class="active-dataset-info" id="active-dataset-meta" style="display: none;">
+                <div class="dataset-meta-details">
+                    <div class="dataset-meta-item">
+                        <i data-lucide="file-spreadsheet"></i>
+                        <span class="dataset-meta-label">File Name:</span>
+                        <span class="dataset-meta-value" id="meta-file-name">N/A</span>
+                    </div>
+                    <div class="dataset-meta-item">
+                        <i data-lucide="rows"></i>
+                        <span class="dataset-meta-label">Total Rows:</span>
+                        <span class="dataset-meta-value" id="meta-row-count">0</span>
+                    </div>
+                    <div class="dataset-meta-item">
+                        <i data-lucide="columns"></i>
+                        <span class="dataset-meta-label">Columns Count:</span>
+                        <span class="dataset-meta-value" id="meta-col-count">0</span>
+                    </div>
+                    <div class="dataset-meta-item">
+                        <i data-lucide="alert-triangle"></i>
+                        <span class="dataset-meta-label">Missing Values:</span>
+                        <span class="dataset-meta-value text-muted" id="meta-missing-count">0</span>
+                    </div>
+                </div>
+                <div class="dataset-meta-item">
+                    <span class="badge-positive kpi-badge" id="meta-profile-tag">Processed Clean</span>
+                </div>
+            </div>
+            
+            <!-- GLOBAL FILTERS BAR (Hidden by default) -->
+            <div class="glass-card filter-bar-card" id="global-filter-bar" style="display: none;">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="filter-category">Breakdown Filter</label>
+                        <select class="filter-select" id="filter-category">
+                            <option value="ALL">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-region">Region / Cluster Segment</label>
+                        <select class="filter-select" id="filter-region">
+                            <option value="ALL">All Regions</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-search">Search Text</label>
+                        <input type="text" class="filter-input" id="filter-search" placeholder="Type text search...">
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" id="reset-filters-btn" style="width: 100%;">
+                            <i data-lucide="refresh-cw"></i>
+                            <span>Reset Filters</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DYNAMIC METRICS KPI GRID (Hidden by default) -->
+            <div class="kpi-grid" id="dashboard-kpis" style="display: none;">
+                <!-- Filled dynamically by dashboard.js -->
+            </div>
+            
+            <!-- 2. SALES & REVENUE TAB -->
+            <div class="tab-content" id="sales-tab">
+                <div class="charts-grid">
+                    <div class="glass-card chart-card-col-8 glow-primary">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Executive Revenue Trends & Forecast projections</h3>
+                                <p class="chart-card-subtitle">Showing historical sales patterns and 3-month mathematical exponential forecast.</p>
+                            </div>
+                            <span class="badge-positive kpi-badge"><i data-lucide="sparkles"></i> AI Forecasting Enabled</span>
+                        </div>
+                        <div class="chart-container" id="sales-trend-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-4 glow-success">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">What-If Revenue Simulator</h3>
+                                <p class="chart-card-subtitle">Adjust market parameters to simulate forecasted returns.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="whatif-simulation-panel">
+                            <div class="whatif-sliders-container">
+                                <div class="whatif-slider-group">
+                                    <div class="whatif-label-row">
+                                        <span>Average Selling Price Change</span>
+                                        <span class="whatif-val" id="val-slider-price">0%</span>
+                                    </div>
+                                    <input type="range" class="whatif-slider" id="slider-price" min="-30" max="30" value="0">
+                                </div>
+                                <div class="whatif-slider-group">
+                                    <div class="whatif-label-row">
+                                        <span>Marketing Outlay Increase</span>
+                                        <span class="whatif-val" id="val-slider-marketing">0%</span>
+                                    </div>
+                                    <input type="range" class="whatif-slider" id="slider-marketing" min="0" max="50" value="0">
+                                </div>
+                                <div class="whatif-slider-group">
+                                    <div class="whatif-label-row">
+                                        <span>Customer Conversion Rate Shift</span>
+                                        <span class="whatif-val" id="val-slider-conversion">0%</span>
+                                    </div>
+                                    <input type="range" class="whatif-slider" id="slider-conversion" min="-10" max="10" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="rec-card" style="margin-top: 10px;">
+                                <div class="rec-card-num"><i data-lucide="calculator"></i></div>
+                                <div class="rec-card-body">
+                                    <div class="rec-card-title">Simulated Quarterly Forecast Impact</div>
+                                    <div class="rec-card-desc" id="whatif-simulation-summary">Adjust sliders above to observe simulated revenue forecast shifts instantly on the curve!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-6">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Category Revenue Contribution Breakdown</h3>
+                                <p class="chart-card-subtitle">Hover slice to view percentage contributions and click to drill down.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="sales-category-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-6">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Geographical Regional Performance</h3>
+                                <p class="chart-card-subtitle">Comparative revenue analysis grouped by sales regions.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="sales-region-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. CUSTOMER CHURN TAB -->
+            <div class="tab-content" id="churn-tab">
+                <div class="charts-grid">
+                    <div class="glass-card chart-card-col-8 glow-danger">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Customer Retention Cohorts & Life Cycle Activity</h3>
+                                <p class="chart-card-subtitle">Revealing customer cohort longevity patterns grouped by acquisition month.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="churn-cohort-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-4">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Primary Churn Drivers</h3>
+                                <p class="chart-card-subtitle">Correlation coefficient strength mapping for risk indicators.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="churn-drivers-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-6">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Churn Propensity Distribution</h3>
+                                <p class="chart-card-subtitle">AI profiling segmenting customer accounts by high, medium, and low risk of churn.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="churn-propensity-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-6">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Account Inactivity vs Ticket Frequency</h3>
+                                <p class="chart-card-subtitle">Outlining high churn danger zone quadrant (High inactivity & High ticket complaints).</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="churn-inactivity-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. CUSTOMER SEGMENTATION TAB -->
+            <div class="tab-content" id="segmentation-tab">
+                <div class="charts-grid">
+                    <div class="glass-card chart-card-col-8 glow-primary">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">2D Interactive K-Means Cluster Clustering Diagram</h3>
+                                <p class="chart-card-subtitle">Calculated by K-Means ($k=4$). Grouping users based on Purchase Frequency vs Annual Expenditure.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="segmentation-cluster-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-4">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Interactive Cluster Insights</h3>
+                                <p class="chart-card-subtitle">AI mathematical summary profiling cluster properties.</p>
+                            </div>
+                        </div>
+                        <div id="segmentation-profile-details" style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Populated dynamically by dashboard.js -->
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-12">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Calculated Segment Cohort Matrix Profiles</h3>
+                                <p class="chart-card-subtitle">Operational customer characteristics per centroid calculation.</p>
+                            </div>
+                        </div>
+                        <div class="data-table-container">
+                            <table class="dashboard-table" id="segment-characteristics-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cluster Centroid</th>
+                                        <th>Cohort Size</th>
+                                        <th>Avg Annual Expenditure</th>
+                                        <th>Avg Annual Frequency</th>
+                                        <th>Avg Retention Period (Months)</th>
+                                        <th>AI Segment Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="segment-characteristics-body">
+                                    <!-- Filled dynamically by dashboard.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 5. EMPLOYEE PERFORMANCE TAB -->
+            <div class="tab-content" id="performance-tab">
+                <div class="charts-grid">
+                    <div class="glass-card chart-card-col-6 glow-info">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Training Hours vs Evaluation Metric Correlation</h3>
+                                <p class="chart-card-subtitle">Highlighting productivity gains corresponding to professional training investments.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="employee-training-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-6 glow-primary">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Regional Employee Performance Distribution</h3>
+                                <p class="chart-card-subtitle">Distribution of productivity scores classified across regional teams.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="employee-region-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-8">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Manager Productivity Scores & Average Outputs</h3>
+                                <p class="chart-card-subtitle">Aggregated metrics showcasing department outputs.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="employee-manager-chart"></div>
+                    </div>
+                    
+                    <div class="glass-card chart-card-col-4">
+                        <div class="chart-card-header">
+                            <div>
+                                <h3 class="chart-card-title">Performance Correlation Index</h3>
+                                <p class="chart-card-subtitle">Matrix of operational indicators.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container" id="employee-correlation-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 6. CUSTOM ANALYZER TAB -->
+            <div class="tab-content" id="custom-tab">
+                <div class="custom-analysis-builder">
+                    <div class="glass-card builder-sidebar glow-primary">
+                        <h3 class="chart-card-title">Configure Analysis Matrix</h3>
+                        <p class="chart-card-subtitle" style="margin-top: -10px;">Select custom columns to graph datasets instantly.</p>
+                        
+                        <div class="filter-group">
+                            <label for="custom-x-axis">Horizontal X-Axis Column</label>
+                            <select class="filter-select" id="custom-x-axis">
+                                <!-- Populated dynamically with category/date columns -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="custom-y-axis">Vertical Y-Axis Metric</label>
+                            <select class="filter-select" id="custom-y-axis">
+                                <!-- Populated dynamically with numeric columns -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="custom-breakdown">Color Group Breakdown Column</label>
+                            <select class="filter-select" id="custom-breakdown">
+                                <option value="NONE">No Grouping Breakdown</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="custom-chart-type">Desired Visualization Layout</label>
+                            <select class="filter-select" id="custom-chart-type">
+                                <option value="bar">Bar Column Layout</option>
+                                <option value="line">Connected Line Layout</option>
+                                <option value="area">Graded Area Layout</option>
+                                <option value="scatter">2D Scatter Layout</option>
+                                <option value="pie">Proportional Pie Layout</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary" id="render-custom-chart-btn" style="width: 100%; margin-top: 10px;">
+                            <i data-lucide="sparkles"></i>
+                            <span>Generate Custom Graph</span>
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card custom-chart-preview glow-success">
+                        <div style="width: 100%;">
+                            <div class="chart-card-header">
+                                <div>
+                                    <h3 class="chart-card-title" id="custom-chart-main-title">Custom Graphic Analytics Playground</h3>
+                                    <p class="chart-card-subtitle" id="custom-chart-main-subtitle">Choose options on the left to map configurations automatically.</p>
+                                </div>
+                            </div>
+                            <div class="chart-container" id="custom-generated-chart">
+                                <!-- Chart goes here -->
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 350px; color: var(--text-muted); gap: 12px;">
+                                    <i data-lucide="sliders-horizontal" style="width: 48px; height: 48px;"></i>
+                                    <span>Select variables on the left panel to graph configurations dynamically!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DYNAMIC EXECUTIVE SUMMARY & AI INSIGHTS BLOCK (Hidden by default) -->
+            <div id="ai-insights-container" style="display: none; display: flex; flex-direction: column; gap: 24px;">
+                <div class="glass-card glow-primary">
+                    <div class="ai-insights-block">
+                        <div class="insight-header">
+                            <i data-lucide="sparkles" class="insight-sparkle-icon"></i>
+                            <h2 class="insight-header-title">Executive Summary & Automated AI Trends Profiler</h2>
+                        </div>
+                        <div class="insights-list" id="ai-insights-list">
+                            <!-- Filled dynamically by analyzer.js/dashboard.js -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card glow-success">
+                    <div class="ai-insights-block">
+                        <div class="insight-header">
+                            <i data-lucide="award" class="insight-sparkle-icon" style="color: var(--color-success);"></i>
+                            <h2 class="insight-header-title">Tactical Business Recommendations</h2>
+                        </div>
+                        <div class="recommendations-grid" id="ai-recommendations-grid">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        
+    </div>
+    
+    <!-- DRILLDOWN DETAILS TABLE MODAL -->
+    <div class="modal-overlay" id="drilldown-modal">
+        <div class="modal-content-wrapper">
+            <div class="modal-header">
+                <h3 class="modal-title" id="drilldown-modal-title">Sub-dataset Transaction Details</h3>
+                <button class="modal-close-btn" id="close-modal-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="data-table-container" style="max-height: 480px;">
+                    <table class="dashboard-table" id="drilldown-table">
+                        <thead id="drilldown-table-head">
+                            <!-- Populated dynamically -->
+                        </thead>
+                        <tbody id="drilldown-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="text-muted" id="drilldown-count-label" style="margin-right: auto; font-size: 13px; font-weight: 500;">Showing 0 records</span>
+                <button class="btn btn-secondary" id="close-modal-footer-btn">Close</button>
+                <button class="btn btn-primary" id="download-drilldown-csv-btn">
+                    <i data-lucide="download"></i>
+                    <span>Export CSV Sub-Table</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FLOATING AI CHAT ASSISTANT -->
+    <div class="nlp-chat-widget" id="nlp-chat-widget">
+        <div class="nlp-chat-header">
+            <div class="chat-header-user">
+                <div class="chat-header-avatar">🤖</div>
+                <div class="chat-header-info">
+                    <span class="chat-title">Antigravity AI Assistant</span>
+                    <span class="chat-status">Ready to analyze...</span>
+                </div>
+            </div>
+            <button class="chat-close-btn" id="close-chat-btn">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="nlp-chat-messages" id="chat-messages-container">
+            <div class="chat-msg bot">
+                <div class="chat-bubble">
+                    <p>Hello! I am your <strong>Antigravity Analytical Engine</strong>. I have indexed your current dataset.</p>
+                    <p>Ask me anything, like:</p>
+                    <ul>
+                        <li>"Why did sales drop in March?"</li>
+                        <li>"Who is likely to churn?"</li>
+                        <li>"Forecast next quarter revenue."</li>
+                        <li>"What is the correlation between sales and conversion?"</li>
+                    </ul>
+                </div>
+                <span class="chat-msg-time">Just now</span>
+            </div>
+        </div>
+        
+        <!-- Chat Prompt Chips -->
+        <div class="chat-chips" id="chat-chips-container">
+            <!-- Populated dynamically by nlp.js based on loaded analysis -->
+        </div>
+        
+        <div class="nlp-chat-input-area">
+            <input type="text" class="chat-input" id="chat-user-input" placeholder="Ask about trends, forecasts, churn...">
+            <button class="chat-send-btn" id="send-chat-btn">
+                <i data-lucide="send"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- CHAT TRIGGER BUTTON -->
+    <div class="nlp-chat-trigger hidden" id="nlp-chat-trigger" title="Open AI Chat Assistant">
+        <i data-lucide="sparkles"></i>
+    </div>
+
+    <!-- Script Implementations -->
+    <script src="js/parser.js"></script>
+    <script src="js/analyzer.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/nlp.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/app.js"></script>
+    
+</body>
+</html>
